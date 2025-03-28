@@ -14,6 +14,28 @@ from tqdm import tqdm
 import torch
 
 def guessing_entropy(model, X_attack, pt_test, sbox, device, true_key, n_bits=8, n_tries=100, n_attack=None, verbose=False, step=1, batch_pred=False):
+    '''.. function:: guessing_entropy(model, X_attack, pt_test, sbox, device, true_key, n_bits=8, n_tries=100, n_attack=None, verbose=False, step=1, batch_pred=False)
+
+   Compute the guessing entropy for a side-channel attack.
+
+   :param model: The prediction model.
+   :param X_attack: Features for the attack.
+   :param pt_test: Test plaintext values.
+   :param sbox: Substitution box for mapping XOR results.
+   :param device: Computation device (CPU or GPU).
+   :param true_key: The correct key value.
+   :param n_bits: Number of bits for key hypotheses (default: 8).
+   :param n_tries: Number of iterations to average the entropy (default: 100).
+   :param n_attack: Maximum number of attack samples; if None, defaults to range(1, 100, step).
+   :param verbose: If True, enables progress output (default: False).
+   :param step: Step size for attack sample size increments (default: 1).
+   :param batch_pred: If True, perform predictions in batches (default: False).
+
+   :returns: A tuple containing:
+      - **GE**: Array of guessing entropy values.
+      - **n_attacks**: Array of evaluated attack sample sizes.
+   :rtype: tuple(numpy.ndarray, numpy.ndarray)
+'''
     if n_attack is None:
         n_attacks = np.arange(1, 100, step)
     else:
