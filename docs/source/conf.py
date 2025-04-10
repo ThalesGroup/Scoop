@@ -34,3 +34,11 @@ sys.path.insert(0, os.path.abspath('../..'))  # Adjust the relative path to poin
 extensions = [
     'sphinx.ext.autodoc',      # Automatically document your modules
 ]
+
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../'))  # Adjust the relative path to point to your project root.
+
+extensions = [
+    'sphinx.ext.autodoc',      # Automatically document your modules
+]

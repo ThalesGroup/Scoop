@@ -13,6 +13,14 @@ Subpackages
 Submodules
 ----------
 
+Scoop.conf module
+-----------------
+
+.. automodule:: Scoop.conf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 Scoop.scoop module
 ------------------
 
