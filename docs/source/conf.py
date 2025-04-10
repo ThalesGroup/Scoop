@@ -24,17 +24,6 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
-html_static_path = ['_static']
-
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../..'))  # Adjust the relative path to point to your project root.
-
-extensions = [
-    'sphinx.ext.autodoc',      # Automatically document your modules
-]
-
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../'))  # Adjust the relative path to point to your project root.
