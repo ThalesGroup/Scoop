@@ -23,7 +23,7 @@ Execute this script in a Python environment with the required libraries installe
 '''
 
 
-from src.analysis import *
+from scoop.analysis import *
 import matplotlib.ticker as ticker
 
 
