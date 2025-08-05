@@ -1,0 +1,110 @@
+name: Upload release to PyPI
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag for the release'
+        required: true
+
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  pypi-publish:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set version environment variable
+      id: set_version
+      env:
+        VERSION: ${{ github.event.inputs.version || github.ref_name }}
+      run: echo "VERSION=${VERSION#v}" >> $GITHUB_ENV
+
+    - name: Update version in toml
+      run: |
+        sed -i "s/^version = .*/version = \"${{ env.VERSION }}\"/" pyproject.toml
+
+    - name: Update links in README
+      run: |
+        REPO_URL="https://raw.githubusercontent.com/${{ github.repository }}/main"
+        sed -i "s|scoop-logo.png|${REPO_URL}/scoop-logo.png|g" README.md
+        sed -i "s|(manual.md)|(${REPO_URL}/docs/manual.md)|g" README.md
+        sed -i "s|(CONTRIBUTING.md)|(${REPO_URL}/CONTRIBUTING.md)|g" README.md
+        sed -i "s|(LICENSE.md)|(${REPO_URL}/LICENSE.md)|g" README.md
+
+    - name: Install pypa/build
+      run: python3 -m pip install build --user
+
+    - name: Build a binary wheel and a source tarball for test PyPi
+      run: python3 -m build --outdir dist-testpypi
+
+    - name: Publish distribution 📦 to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        packages-dir: dist-testpypi
+        verbose: true
+
+    - name: Create virtual environment for test PyPi
+      run: |
+        uv create .venv
+        source .venv/bin/activate
+        python -m pip install --upgrade pip
+        echo "Waiting for 180 seconds to make sure package is available"
+        sleep 180
+        pip install --no-cache-dir --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ scoop==${{ env.VERSION }}
+        pip install pytest
+      shell: bash
+
+    - name: Run unit tests with test PyPi package
+      run: |
+        source .venv/bin/activate
+        python -m pytest --color=yes test/test_sql_guard_unit.py
+
+    - name: Clear test PyPi virtual environment
+      run: rm -rf .venv
+      shell: bash
+
+    - name: Build a binary wheel and a source tarball for test PyPi
+      run: python3 -m build
+
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+
+    - name: Publish distribution 📦 to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
+
+    - name: Create virtual environment for PyPi
+      run: |
+        uv create .venv
+        source .venv/bin/activate
+        python -m pip install --upgrade pip
+        echo "Waiting for 300 seconds to make sure package is available"
+        sleep 300
+        pip install --no-cache-dir scoop==${{ env.VERSION }}
+        pip install pytest
+      shell: bash
+
+    - name: Run unit tests with test PyPi package
+      run: |
+        source .venv/bin/activate
+        python -m pytest --color=yes test/test_sql_guard_unit.py
