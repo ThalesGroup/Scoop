@@ -60,7 +60,7 @@ class FastTensorDataLoader:
     def __len__(self):
         return self.n_batches
 
-def load_ascad_data(device, batch_size=32):
+def load_ascad_data(device, batch_size=32, path='dataset/ASCAD_data/ASCAD_databases/ASCAD.h5'):
     '''.. function:: load_ascad_data(device, batch_size=32)
 
    Load the ASCAD dataset and create data loaders for profiling and attack traces.
@@ -77,7 +77,7 @@ def load_ascad_data(device, batch_size=32):
       - **key_test**: Test key values.
    :rtype: tuple
 '''
-    ascad_db = h5py.File('dataset/ASCAD_data/ASCAD_databases/ASCAD.h5', 'r')
+    ascad_db = h5py.File(path, 'r')
     profiling_traces = ascad_db['Profiling_traces']
     attack_traces = ascad_db['Attack_traces']
 

@@ -100,7 +100,7 @@ def train_model(model, optimizer, n_epochs, train_loader, valid_loader, hessian_
                   'Expected time left: {:.2f} s'.format((n_epochs - epoch - 1) * (time.time() - start_time) / (epoch + 1)), end='\r')
         if valid_losses[-1] < best_val and save_best_model:
             best_val = valid_losses[-1]
-            torch.save(model, path)
+            torch.save(model.state_dict(), path)
         epoch += 1
         np.save('train_losses.npy', train_losses)
         np.save('valid_losses.npy', valid_losses)

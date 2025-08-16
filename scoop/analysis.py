@@ -50,7 +50,7 @@ def single_model(theta, L):
     '''
     .. function:: single_model(theta, L)
 
-    Single parameter model :math:`\mathbf{F}_i(\alpha_i s_i \mid \theta_i)` as per Eq. 2.3.2.
+    Single parameter model :math:`\\mathbf{F}_i(\\alpha_i s_i | \\theta_i)` as per Eq. 2.3.2.
 
     :param theta: Parameter of the model
     :param L: SCA Leakage
@@ -95,8 +95,8 @@ def softmax(f):
     :param f: A list or tuple with two elements representing the outputs of a scheme-aware model.
     :returns: A list containing two simplified softmax values computed as:
 
-        - :math:`\frac{\exp(f[0])}{\exp(f[0]) + \exp(f[1])}`
-        - :math:`\frac{\exp(f[1])}{\exp(f[0]) + \exp(f[1])}`
+        - :math:`\\frac{\\exp(f[0])}{\\exp(f[0]) + \\exp(f[1])}`
+        - :math:`\\frac{\\exp(f[1])}{\\exp(f[0]) + \\exp(f[1])}`
     '''
     return [simplify(exp(f[0])/(exp(f[0])+exp(f[1]))), simplify(exp(f[1])/(exp(f[0])+exp(f[1])))]    
 
@@ -113,7 +113,7 @@ def NLL(f, s):
 
     :param f: A list or tuple containing two numerical values corresponding to the model outputs.
     :param s: The secret value (expected to be 0 or 1) for which the likelihood is computed.
-    :returns: The negative log-likelihood computed as :math:`-\frac{f[s]}{\log(2)}`.
+    :returns: The negative log-likelihood computed as :math:`-\\frac{f[s]}{\\log(2)}`.
     '''
     if s == 0:
         return -f[0]/np.log(2)
@@ -124,12 +124,12 @@ def compute_gradients(loss, theta0, theta1):
     '''
     .. function:: compute_gradients(loss, theta0, theta1)
 
-    Compute the gradient of the loss function with respect to the parameters :math:`\theta_0` and :math:`\theta_1`.
+    Compute the gradient of the loss function with respect to the parameters :math:`\\theta_0` and :math:`\\theta_1`.
 
     :param loss: The loss function.
     :param theta0: The first parameter.
     :param theta1: The second parameter.
-    :returns: A list containing the gradients of the loss with respect to :math:`\theta_0` and :math:`\theta_1`.
+    :returns: A list containing the gradients of the loss with respect to :math:`\\theta_0` and :math:`\\theta_1`.
     '''
     loss_g = [diff(loss, theta0), diff(loss, theta1)]
     return loss_g
@@ -138,12 +138,12 @@ def calculate_loss(theta0x, theta1y, theta0, theta1, cumulated_loss):
     '''
     .. function:: calculate_loss(theta0x, theta1y, theta0, theta1, cumulated_loss)
 
-    Evaluate the loss function given the parameters :math:`\theta_0` and :math:`\theta_1`.
+    Evaluate the loss function given the parameters :math:`\\theta_0` and :math:`\\theta_1`.
 
-    :param theta0x: Numerical value to substitute for :math:`\theta_0`.
-    :param theta1y: Numerical value to substitute for :math:`\theta_1`.
-    :param theta0: Symbolic variable representing :math:`\theta_0`.
-    :param theta1: Symbolic variable representing :math:`\theta_1`.
+    :param theta0x: Numerical value to substitute for :math:`\\theta_0`.
+    :param theta1y: Numerical value to substitute for :math:`\\theta_1`.
+    :param theta0: Symbolic variable representing :math:`\\theta_0`.
+    :param theta1: Symbolic variable representing :math:`\\theta_1`.
     :param cumulated_loss: Symbolic expression for the cumulated loss function.
     :returns: The evaluated loss value as a floating point number.
     '''
@@ -157,7 +157,7 @@ def l1_eps_mirror_map(x, eps=0.1):
     The transformation is defined as:
 
     .. math::
-        (1+\epsilon)|x|^{\epsilon}\operatorname{sign}(x)
+        (1+\\epsilon)|x|^{\\epsilon}\\operatorname{sign}(x)
 
     :param x: Input value(s) to be transformed.
     :param eps: Epsilon parameter used in the transformation (default: 0.1).
@@ -169,7 +169,7 @@ def project_axis(thetas, eps=0.1):
     '''
     .. function:: project_axis(thetas, eps=0.1)
 
-    Project the parameters :math:`\theta_0` and :math:`\theta_1` onto the :math:`\ell_{1+\epsilon}` ball.
+    Project the parameters :math:`\\theta_0` and :math:`\\theta_1` onto the :math:`\\ell_{1+\\epsilon}` ball.
 
     :param thetas: A list of parameter values.
     :param eps: Epsilon value for the mirror map transformation (default: 0.1).
@@ -184,11 +184,11 @@ def compute_hessian(loss, theta0, theta1):
     '''
     .. function:: compute_hessian(loss, theta0, theta1)
 
-    Compute the Hessian of the loss function with respect to the parameters :math:`\theta_0` and :math:`\theta_1`.
+    Compute the Hessian of the loss function with respect to the parameters :math:`\\theta_0` and :math:`\\theta_1`.
 
     :param loss: The loss function as a symbolic expression.
-    :param theta0: The symbolic variable representing :math:`\theta_0`.
-    :param theta1: The symbolic variable representing :math:`\theta_1`.
+    :param theta0: The symbolic variable representing :math:`\\theta_0`.
+    :param theta1: The symbolic variable representing :math:`\\theta_1`.
     :returns: A 2x2 list representing the Hessian matrix of the loss function.
     '''
     loss_h = [[diff(diff(loss, theta0), theta0), diff(diff(loss, theta0), theta1)],
@@ -249,13 +249,13 @@ def evaluate_hessian(hessian, theta0x, theta1y, theta0, theta1, epsilon=1e-7):
     '''
     .. function:: evaluate_hessian(hessian, theta0x, theta1y, theta0, theta1, epsilon=1e-7)
 
-    Evaluates the Hessian at a given point :math:`(\theta_0, \theta_1)`.
+    Evaluates the Hessian at a given point :math:`(\\theta_0, \\theta_1)`.
 
     :param hessian: A 2x2 Hessian matrix represented as a list of lists with symbolic expressions.
-    :param theta0x: The numerical value to substitute for :math:`\theta_0`.
-    :param theta1y: The numerical value to substitute for :math:`\theta_1`.
-    :param theta0: The symbolic variable representing :math:`\theta_0`.
-    :param theta1: The symbolic variable representing :math:`\theta_1`.
+    :param theta0x: The numerical value to substitute for :math:`\\theta_0`.
+    :param theta1y: The numerical value to substitute for :math:`\\theta_1`.
+    :param theta0: The symbolic variable representing :math:`\\theta_0`.
+    :param theta1: The symbolic variable representing :math:`\\theta_1`.
     :param epsilon: A small value added to each Hessian element for numerical stability (default: 1e-7).
     :returns: The evaluated and adjusted Hessian as a 2x2 list.
     '''
@@ -331,11 +331,11 @@ def get_gradient_slice(ll_grad, thetax):
     '''
     .. function:: get_gradient_slice(ll_grad, thetax)
 
-    Takes a slice of the gradient landscape at a given :math:`\theta_x`.
+    Takes a slice of the gradient landscape at a given :math:`\\theta_x`.
 
     :param ll_grad: A 2D NumPy array representing the gradient landscape.
     :param thetax: The index (coordinate) along the x-axis at which to extract the gradient slice.
-    :returns: A list containing the gradient values at the specified :math:`\theta_x` coordinate.
+    :returns: A list containing the gradient values at the specified :math:`\\theta_x` coordinate.
     :rtype: list
     '''
     n,m = np.shape(ll_grad)

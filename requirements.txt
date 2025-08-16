@@ -57,7 +57,7 @@ pyparsing==3.2.3
 python-dateutil==2.9.0.post0
 pyyaml==6.0.2
 pyzmq==26.3.0
-setuptools==78.1.1
+setuptools==78.0.2
 six==1.17.0
 sqlalchemy==2.0.39
 stack-data==0.6.3

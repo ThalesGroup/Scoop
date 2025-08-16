@@ -20,6 +20,10 @@ Usage
 -----
 
 Execute this script in a Python environment with the required libraries installed. Modify parameters such as learning rates, discretization steps, and masking schemes to experiment with different settings.
+
+Note
+-----
+You can visualize the dual space by uncommenting the last lines of this script.
 '''
 
 
@@ -272,29 +276,32 @@ ax.set_xlabel(r'$\theta_0$')
 ax.set_ylabel(r'$\theta_1$')
 plt.show(block=False)
 
-theta0_values_dual = project_axis(theta0_values, eps=0.1)
-theta1_values_dual = project_axis(theta1_values, eps=0.1)
-xx, yy = np.meshgrid(theta0_values_dual, theta1_values_dual)
+
+### IF YOU WANT TO VISUALIZE THE DUAL LOSS LANDSCAPE, UNCOMMENT THOSE LINES
+
+# theta0_values_dual = project_axis(theta0_values, eps=0.1)
+# theta1_values_dual = project_axis(theta1_values, eps=0.1)
+# xx, yy = np.meshgrid(theta0_values_dual, theta1_values_dual)
 
 
-fig, ax = plt.subplots()
-contour = ax.contourf(xx, yy, loss_landscape, levels=levels, cmap='plasma', extend='both', vmin=0.5, vmax=1.2)
-contour_level = ax.contour(xx, yy, loss_landscape, levels=levels, colors=('k',),  linewidths=(0.5,))
-ax.clabel(contour_level, fmt='%2.1f', colors='w', fontsize=11)
-cbar = fig.colorbar(contour)
-cbar.ax.set_ylabel('Loss')
-cbar.add_lines(contour_level)
-ax.set_xlabel(r'$\nabla\psi\left(\theta_0\right)$')
-ax.set_ylabel(r'$\nabla\psi\left(\theta_1\right)$')
-plt.show(block=False)
+# fig, ax = plt.subplots()
+# contour = ax.contourf(xx, yy, loss_landscape, levels=levels, cmap='plasma', extend='both', vmin=0.5, vmax=1.2)
+# contour_level = ax.contour(xx, yy, loss_landscape, levels=levels, colors=('k',),  linewidths=(0.5,))
+# ax.clabel(contour_level, fmt='%2.1f', colors='w', fontsize=11)
+# cbar = fig.colorbar(contour)
+# cbar.ax.set_ylabel('Loss')
+# cbar.add_lines(contour_level)
+# ax.set_xlabel(r'$\nabla\psi\left(\theta_0\right)$')
+# ax.set_ylabel(r'$\nabla\psi\left(\theta_1\right)$')
+# plt.show(block=False)
 
-fig, ax = plt.subplots()
-contour = ax.contourf(xx, yy, loss_landscape_grad, levels=levels_grad, cmap='plasma', extend='both')
-contour_level = ax.contour(xx, yy, loss_landscape_grad, levels=levels_grad, colors=('k',),  linewidths=(0.5,))
-ax.clabel(contour_level, fmt=ticker.FuncFormatter(fmt), colors='w', fontsize=11)
-cbar = fig.colorbar(contour, format=ticker.FuncFormatter(fmt))
-cbar.ax.set_ylabel('Gradient of the Loss')
-cbar.add_lines(contour_level)
-ax.set_xlabel(r'$\nabla\psi\left(\theta_0\right)$')
-ax.set_ylabel(r'$\nabla\psi\left(\theta_1\right)$')
-plt.show()
+# fig, ax = plt.subplots()
+# contour = ax.contourf(xx, yy, loss_landscape_grad, levels=levels_grad, cmap='plasma', extend='both')
+# contour_level = ax.contour(xx, yy, loss_landscape_grad, levels=levels_grad, colors=('k',),  linewidths=(0.5,))
+# ax.clabel(contour_level, fmt=ticker.FuncFormatter(fmt), colors='w', fontsize=11)
+# cbar = fig.colorbar(contour, format=ticker.FuncFormatter(fmt))
+# cbar.ax.set_ylabel('Gradient of the Loss')
+# cbar.add_lines(contour_level)
+# ax.set_xlabel(r'$\nabla\psi\left(\theta_0\right)$')
+# ax.set_ylabel(r'$\nabla\psi\left(\theta_1\right)$')
+# plt.show()

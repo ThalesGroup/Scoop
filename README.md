@@ -26,13 +26,19 @@ Activate the virtual environment:
 source scoop_ches25/bin/activate
 ```
 
-Then, install the required packages. We provide a `requirements.txt` file that contains all the necessary packages to run the code. You can install them using `pip`:
+Then, install the required packages. We provide a `requirements.txt` file that contains all the necessary packages to run the code. You can install them using `uv`:
 
 ```bash
 uv pip install -r requirements.txt
 ```
 
 WARNING: The `requirements.txt` file has been generated on a Linux platform. If you are using a different platform, you may need to manually install the required packages.
+
+Some figures require LaTeX compilation, you might have to install the following packages:
+
+```bash
+sudo apt-get install texlive texlive-latex-extra texlive-fonts-recommended dvipng cm-super
+```
 
 ## Requirements
 
@@ -49,12 +55,12 @@ Additionally, the CUDA version on our platform is 12.0. If you have CUDA 11.8 or
 At this time, Scoop has only been implemented in PyTorch. To use Scoop, one needs to import `scoop` in his project:
 
 ```python
-    from scoop import Scoop
+    from scoop.scoop import Scoop
 ```
 
 `Scoop` is a class that inherits from `torch.optim.Optimizer`. Hence, one can use it as any other optimizer in PyTorch, we detail its hyperparameters later. The main difference with standard optimizer is that Scoop relies on a Hessian estimator. Hence, `Scoop` has a `hutchinson_hessian` method that update the Hessian estimation in-place.
 
-The main contribution is located in `scoop.py`. To use Scoop, create an instance of the `Scoop` class as you would do with any other optimizer:
+The main contribution is located in `scoop.py` and is a fork of Sophia Optimizer. To use Scoop, create an instance of the `Scoop` class as you would do with any other optimizer:
 
 ```python
 optimizer = Scoop(model.parameters(), lr=lr)
@@ -91,9 +97,24 @@ While default values are given, we suggest adding those hyperparameters to the f
 
 ## Examples
 
+### List of Examples
+
+`Scoop` is shipped with some demonstration scripts and notebooks that enables to reproduce some of the main results of the paper. They are found in the `examples/` directory. Here is a brief description of each example:
+
+| **File Name** | **Type** | **Description**|
+|---------------|----------|------------------|
+| `analytical_model.py` | Python Script | Performs analytical DL-SCA on a toy example. Computes the exact loss landscape and reproduce figures 2.4.1a and 2.4.1b. |
+| `ascadv2_attack.ipynb` | Jupyter Notebook | Given a pre-trained model, reproduces the attack on ASCADv2 and generates Fig. 6.3.1b. |
+| `ascadv2_profiling.ipynb` | Jupyter Notebook | Reproducing the profiling on ASCADv2 and generates Fig. 6.3.1a. |
+| `finetuning_table_generation.ipynb` | Jupyter Notebook | Given a hyperparameter optimization database output, recompute the different performance metrics in Section 6.2.3. |
+| `hutchinson_impact_of_z.py` | Python Script | Studies the role of the law of z for the Hessian estimation (Section 3.3.2), and showcases the potential gain induced by biasing the estimation. |
+
+
+### Runnig The Examples
+
 You can explore the different notebooks in this repository for more detailed examples and additional figures.
 
-**Pre-trained model**: The pre-trained model is heavy (>900MB) and is not included in this repository. You can download it from [here](https://drive.google.com/file/d/14OCmebP356B9RkdsmhUW89tGpU2_WZDy/view?usp=drive_link), which is google drive link.
+**Pre-trained model**: The pre-trained model is heavy (>900MB) and is not included in this repository. You can download it from the GitHub repository.
 
 To run the examples scripts, you can use the following command:
 
@@ -108,6 +129,12 @@ cd examples
 jupyter notebook
 ```
 
+Please note that for jupyter notebooks, if not already done, you must download the notebook package:
+
+```bash
+pip install notebook
+```
+
 Then, open the desired notebook and run the cells.
 
 ## Citation
@@ -115,12 +142,14 @@ Then, open the desired notebook and run the cells.
 If you use Scoop, or this code, in your research please cite the following paper:
 
 ```bibtex
-@misc{cryptoeprint:2025/498,
-      author = {Nathan Rousselot and Karine Heydemann and Loïc Masure and Vincent Migairou},
-      title = {Scoop: An Optimizer for Profiling Attacks against Higher-Order Masking},
-      howpublished = {Cryptology {ePrint} Archive, Paper 2025/498},
-      year = {2025},
-      url = {https://eprint.iacr.org/2025/498}
+@article{rousselot2025scoop,
+  title={Scoop: An Optimization Algorithm for Profiling Attacks against Higher-Order Masking},
+  author={Rousselot, Nathan and Heydemann, Karine and Masure, Lo{\"\i}c and Migairou, Vincent},
+  journal={IACR Transactions on Cryptographic Hardware and Embedded Systems},
+  volume={2025},
+  number={3},
+  pages={56--80},
+  year={2025}
 }
 ```
 
